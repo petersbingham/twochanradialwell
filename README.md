@@ -11,8 +11,11 @@ Clone the repository and install with the following commands:
     
 ## Dependencies
 Standard Libraries: numpy & scipy
+
 pynumwrap https://github.com/petersbingham/pynumwrap
+
 pynumutil https://github.com/petersbingham/pynumutil
+
 channelutil https://github.com/petersbingham/channelutil
 
 ## Usage
