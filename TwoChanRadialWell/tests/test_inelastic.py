@@ -3,12 +3,9 @@ import sys
 basedir = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0,basedir+'/../..')
 
-import channelutil as chanutil
 import TwoChanRadialWell as radwell
 import channelutil as chanutil
 import unittest
-
-radwell.nw.mode = radwell.nw.mode_norm
 
 class test_elastic(unittest.TestCase):
     def runTest(self):

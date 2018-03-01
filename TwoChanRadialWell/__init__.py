@@ -131,7 +131,8 @@ class Mats:
             self.K = K
             self.V = V
         def _getRow(self, i):
-            return [nw.pow(self.K[i][0],2)-self.V[i][0], nw.pow(self.K[i][1],2)-self.V[i][1]]
+            return [nw.pow(self.K[i][0],2)-self.V[i][0],
+                    nw.pow(self.K[i][1],2)-self.V[i][1]]
 
     class aSqMat(mat):
         def __init__(self, A):
@@ -186,18 +187,26 @@ class Smat(mat):
             if self.resultsType == RESULTS_TYPE_FLOAT64:
                 return complex(result)
             elif self.resultsType == RESULTS_TYPE_FLOAT32:
-                return complex(float(np.float32(result.real)), float(np.float32(result.imag)))
+                return complex(float(np.float32(result.real)), 
+                               float(np.float32(result.imag)))
             else:
-                return complex(self._truncate_float(float(result.real), self.resultsType), self._truncate_float(float(result.imag), self.resultsType))
+                return complex(self._truncate_float(float(result.real), 
+                                                    self.resultsType), 
+                               self._truncate_float(float(result.imag), 
+                                                    self.resultsType))
         else:
             return result
 
     def _S_11(self):
-        ret = self._g(-self._rho_1(), self._rho_2()) / self._denum() * self._exp(2.0*self._rho_1())
+        ret = self._g(-self._rho_1(), self._rho_2()) / self._denum() *\
+                self._exp(2.0*self._rho_1())
         return self._cast_result(ret)
 
     def _S_12(self):
-        ret = 2.0 * (self._zeta_1()-self._zeta_2()) * nw.sqrt(self._alp_1()*self._alp_2()*self._rho_1()*self._rho_2()) / self._denum() * self._exp(self._rho_1() + self._rho_2())
+        ret = 2.0 * (self._zeta_1()-self._zeta_2()) *\
+            nw.sqrt(self._alp_1()*self._alp_2()*self._rho_1()*self._rho_2()) /\
+            self._denum() *\
+            self._exp(self._rho_1() + self._rho_2())
         return self._cast_result(ret)
 
     def _S_21(self):
@@ -205,13 +214,17 @@ class Smat(mat):
         return self._cast_result(ret)
 
     def _S_22(self):
-        ret = self._g(self._rho_1(), -self._rho_2()) / self._denum() * self._exp(2.0*self._rho_2())
+        ret = self._g(self._rho_1(), -self._rho_2()) / self._denum() *\
+        self._exp(2.0*self._rho_2())
         return self._cast_result(ret)
 
     def _g(self, rho_1, rho_2):
-        complex1 = rho_1 * (self._zeta_1()*self._alp_1() - self._zeta_2()*self._alp_2())
-        complex2 = rho_2 * (self._zeta_2()*self._alp_1() - self._zeta_1()*self._alp_2())
-        real = (self._alp_1()-self._alp_2()) * (rho_1*rho_2 - self._zeta_1()*self._zeta_2())
+        complex1 = rho_1 *\
+                   (self._zeta_1()*self._alp_1() - self._zeta_2()*self._alp_2())
+        complex2 = rho_2 *\
+                   (self._zeta_2()*self._alp_1() - self._zeta_1()*self._alp_2())
+        real = (self._alp_1()-self._alp_2()) *\
+               (rho_1*rho_2 - self._zeta_1()*self._zeta_2())
         return real + (complex1+complex2)*1.0j
 
     def _denum(self, test=True):
@@ -269,7 +282,9 @@ class Smat(mat):
 
     def _e_n_Sq_alt(self, n):
         first = (nw.pow(self._R_alp(0),2.0)+nw.pow(self._R_alp(1),2.0)) / 2.0
-        second = nw.sqrt(  nw.pow(nw.pow(self._R_alp(0),2.0)-nw.pow(self._R_alp(1),2.0),2.0) + 4.0*nw.pow(self.mats.V[0][1],2.0)*nw.pow(self.r0,4.0)   ) / 2.0
+        a = nw.pow(nw.pow(self._R_alp(0),2.0)-nw.pow(self._R_alp(1),2.0),2.0)
+        b = 4.0*nw.pow(self.mats.V[0][1],2.0)*nw.pow(self.r0,4.0)
+        second = nw.sqrt( a + b ) / 2.0
         if n==0:
             return first+second
         else:
@@ -280,7 +295,8 @@ class Smat(mat):
 
     def _R_alp(self, ch):
         cal1 = nw.sqrt( self.mats.A[ch][ch] ) * self.r0
-        cal2 = nw.sqrt( nw.pow(self._rho_alp(ch),2) - self.mats.V[ch][ch]*nw.pow(self.r0,2.0) )
+        cal2 = nw.sqrt( nw.pow(self._rho_alp(ch),2) -\
+        self.mats.V[ch][ch]*nw.pow(self.r0,2.0) )
         if EQUIVALENT_TESTS:
             if not gu.complexCompare(cal1, cal2):
                 raise DCException("_R_alp: " + str(cal1) + "   " + str(cal2))
@@ -292,3 +308,10 @@ def getSmatFun(r0, v1, v2, chanCalc, lam, resultsType=RESULTS_TYPE_DEFAULT):
     mats = Mats(v1, v2, chanCalc, lam)
     sMat = Smat(r0, mats, resultsType)
     return lambda ene : sMat.setEnergy(ene).getMatrix()
+
+def usePythonTypes():
+    nw.mode = nw.mode_norm
+
+def usempmathTypes():
+    nw.mode = nw.mode_mpmath
+
