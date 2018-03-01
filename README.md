@@ -21,7 +21,7 @@ Author Libraries (these will have their own dependencies):
 
 ## Usage
 
-The getSmatFun function returns a function reference to the S-matrix as a function of energy. It's signiture looks like:
+The getSmatFun function returns a function reference to the S-matrix as a function of energy. It's signature looks like:
 ```python
 getSmatFun(r0, v1, v2, chanCalc, lam)
 ```
