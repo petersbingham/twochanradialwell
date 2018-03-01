@@ -27,7 +27,7 @@ getSmatFun(r0, v1, v2, chanCalc, lam)
 ```
 `r0`, `v1`, `v2` and `lam` should be obvious after consulting Newton's text. The channel calc is created in the client code and is described at the link in the Dependencies section. It contains the threshold values.
 
-There are two types that TwoChanRadialWell is compatible with, standard python types and mpmath types. Python types is the default. To change to mpmath types call the module function `usempmathTypes()`. The example below illustrate usage.
+The example below illustrates usage.
 ```python
 >>> import TwoChanRadialWell as radwell
 >>> import channelutil as chanutil
@@ -37,3 +37,5 @@ There are two types that TwoChanRadialWell is compatible with, standard python t
 [[  1.00000000+0.j   0.00000000+0.j]
  [  0.00000000+0.j -13.56891277+0.j]]
 ```
+
+There are two types that TwoChanRadialWell is compatible with, standard python types and mpmath types. Python types is the default. To change to mpmath types call the module function `usempmathTypes()`.
