@@ -309,9 +309,8 @@ def getSmatFun(r0, v1, v2, chanCalc, lam, resultsType=RESULTS_TYPE_DEFAULT):
     sMat = Smat(r0, mats, resultsType)
     return lambda ene : sMat.setEnergy(ene).getMatrix()
 
-def usePythonTypes():
-    nw.mode = nw.mode_norm
+def usePythonTypes(dps=nw.dps_default_python):
+    nw.usePythonTypes(dps)
 
-def usempmathTypes():
-    nw.mode = nw.mode_mpmath
-
+def usempmathTypes(dps=nw.dps_default_mpmath):
+    nw.usempmathTypes(dps)
