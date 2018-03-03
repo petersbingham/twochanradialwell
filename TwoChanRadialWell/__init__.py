@@ -11,7 +11,7 @@ RESULTS_TYPE_FLOAT32 = -1
 RESULTS_TYPE_FLOAT64 = -2
 RESULTS_TYPE_DEFAULT = 0
 
-gu = num.Compare()
+gu = num.nearlyEqual()
 
 class DCException(Exception):
     def __init__(self, string):
@@ -99,7 +99,7 @@ class Mats:
 
     class Kmat(mat):
         def __init__(self, chanCalc):
-            mat.__init__(self, 2, num.PRECISION)
+            mat.__init__(self, 2, num.precision)
             self.ene = 0
             self.chanCalc = chanCalc
         def setEnergy(self, ene):
@@ -114,7 +114,7 @@ class Mats:
 
     class Vmat(mat):
         def __init__(self, v1, v2, chanCalc, lam):
-            mat.__init__(self, 2, num.PRECISION)
+            mat.__init__(self, 2, num.precision)
             self.v1 = v1
             self.v2 = v2
             self.massMult = chanCalc.getMult()
@@ -127,7 +127,7 @@ class Mats:
 
     class Amat(mat):
         def __init__(self, K, V):
-            mat.__init__(self, 2, num.PRECISION)
+            mat.__init__(self, 2, num.precision)
             self.K = K
             self.V = V
         def _getRow(self, i):
@@ -136,7 +136,7 @@ class Mats:
 
     class aSqMat(mat):
         def __init__(self, A):
-            mat.__init__(self, 2, num.PRECISION)
+            mat.__init__(self, 2, num.precision)
             self.A = A
             self.calculate()
         def calculate(self):
@@ -148,7 +148,7 @@ class Mats:
 
     class aMat(mat):
         def __init__(self, aSq):
-            mat.__init__(self, 2, num.PRECISION)
+            mat.__init__(self, 2, num.precision)
             self.aSq = aSq
             self.calculate()
         def calculate(self):
@@ -159,7 +159,7 @@ class Mats:
 
 class Smat(mat):
     def __init__(self, r0, mats, resultsType=RESULTS_TYPE_DEFAULT):
-        mat.__init__(self, 2, num.PRECISION)
+        mat.__init__(self, 2, num.precision)
         self.resultsType = resultsType
         self.numChannels = 2
         self.mats = mats
