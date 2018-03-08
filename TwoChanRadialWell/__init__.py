@@ -13,11 +13,11 @@ RESULTS_TYPE_DEFAULT = 0
 
 gu = num.nearlyEqual()
 
-class DCException(Exception):
+class RadWellException(Exception):
     def __init__(self, string):
         self.string = string
     def __str__(self):
-        return "DC Error: " + self.string
+        return "Rad Well Error: " + self.string
 
 class mat:
     PADDING = 3
@@ -230,7 +230,7 @@ class Smat(mat):
     def _denum(self, test=True):
         value = self._g(self._rho_1(), self._rho_2())
         if test and gu.complexCompare(value, 0.0):
-            raise DCException("_denum: Zero")
+            raise RadWellException("_denum: Zero")
         return value
 
     def _exp(self, rho):
@@ -249,7 +249,7 @@ class Smat(mat):
         cal2 = nw.pow(self._R_alp(1), 2) - nw.pow(self._e_n(1), 2)
         if EQUIVALENT_TESTS:
             if not gu.complexCompare(cal1, cal2):
-                raise DCException("_alp_1: " + str(cal1) + "   " + str(cal2))
+                raise RadWellException("_alp_1: " + str(cal1) + "   " + str(cal2))
         return cal1
 
     def _alp_2(self):
@@ -257,7 +257,7 @@ class Smat(mat):
         cal2 = nw.pow(self._R_alp(1), 2) - nw.pow(self._e_n(0), 2)
         if EQUIVALENT_TESTS:
             if not gu.complexCompare(cal1, cal2):
-                raise DCException("_alp_2: " + str(cal1) + "   " + str(cal2))
+                raise RadWellException("_alp_2: " + str(cal1) + "   " + str(cal2))
         return cal1
 
     def _zeta_1(self):
@@ -274,7 +274,7 @@ class Smat(mat):
         cal2 = nw.sqrt(self._e_n_Sq_alt(n))
         if EQUIVALENT_TESTS:
             if not gu.complexCompare(cal1, cal2):
-                raise DCException("_e_n: " + str(cal1) + "   " + str(cal2))
+                raise RadWellException("_e_n: " + str(cal1) + "   " + str(cal2))
         if LIN_ALGEBRA:
             return cal1
         else:
@@ -299,7 +299,7 @@ class Smat(mat):
         self.mats.V[ch][ch]*nw.pow(self.r0,2.0) )
         if EQUIVALENT_TESTS:
             if not gu.complexCompare(cal1, cal2):
-                raise DCException("_R_alp: " + str(cal1) + "   " + str(cal2))
+                raise RadWellException("_R_alp: " + str(cal1) + "   " + str(cal2))
         return cal2
 
 #######
@@ -312,5 +312,5 @@ def getSmatFun(r0, v1, v2, chanCalc, lam, resultsType=RESULTS_TYPE_DEFAULT):
 def usePythonTypes(dps=nw.dps_default_python):
     nw.usePythonTypes(dps)
 
-def usempmathTypes(dps=nw.dps_default_mpmath):
-    nw.usempmathTypes(dps)
+def useMpmathTypes(dps=nw.dps_default_mpmath):
+    nw.useMpmathTypes(dps)
