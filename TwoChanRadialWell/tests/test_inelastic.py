@@ -9,7 +9,7 @@ import unittest
 
 class test_elastic(unittest.TestCase):
     def runTest(self):
-        chanCalc = chanutil.asymCal([0.,2.],units=chanutil.hartrees)
+        chanCalc = chanutil.asymCal([0.,2.], units=chanutil.HARTs)
         fun = radwell.getSmatFun(1., 2., 2., chanCalc, 1.)
 
         expectMat = radwell.nw.matrix([[1., 0.],[0., -13.56891277]])

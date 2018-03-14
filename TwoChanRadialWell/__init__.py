@@ -3,6 +3,10 @@ import scipy.linalg as la
 
 import pynumutil as num
 import pynumwrap as nw
+try:
+    import tisutil as tu
+except:
+    tu = None
 
 EQUIVALENT_TESTS = False
 LIN_ALGEBRA = False
@@ -117,7 +121,7 @@ class Mats:
             mat.__init__(self, 2, num.precision)
             self.v1 = v1
             self.v2 = v2
-            self.massMult = chanCalc.getMult()
+            self.massMult = chanCalc.getEneConv()
             self.lam = lam
         def _getRow(self, i):
             if i==0:
@@ -302,12 +306,17 @@ class Smat(mat):
                 raise RadWellException("_R_alp: " + str(cal1) + "   " + str(cal2))
         return cal2
 
-#######
+########################################################################   
+######################### Public Interface #############################
+########################################################################
 
 def getSmatFun(r0, v1, v2, chanCalc, lam, resultsType=RESULTS_TYPE_DEFAULT):
     mats = Mats(v1, v2, chanCalc, lam)
     sMat = Smat(r0, mats, resultsType)
-    return lambda ene : sMat.setEnergy(ene).getMatrix()
+    ret = lambda ene : sMat.setEnergy(ene).getMatrix()
+    if tu is not None:
+        ret = tu.cSmat(funPtr, tu.HARTs)
+    return ret
 
 def usePythonTypes(dps=nw.dps_default_python):
     nw.usePythonTypes(dps)
