@@ -313,10 +313,11 @@ class Smat(mat):
 def getSmatFun(r0, v1, v2, chanCalc, lam, resultsType=RESULTS_TYPE_DEFAULT):
     mats = Mats(v1, v2, chanCalc, lam)
     sMat = Smat(r0, mats, resultsType)
-    ret = lambda ene : sMat.setEnergy(ene).getMatrix()
+    funPtr = lambda ene : sMat.setEnergy(ene).getMatrix()
     if tu is not None:
-        ret = tu.cSmat(funPtr, tu.HARTs)
-    return ret
+        return tu.cSmat(funPtr, tu.HARTs)
+    else:
+        funPtr
 
 def usePythonTypes(dps=nw.dps_default_python):
     nw.usePythonTypes(dps)
