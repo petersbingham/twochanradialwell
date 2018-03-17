@@ -10,5 +10,5 @@ setup(name='TwoChanRadialWell',
       author="Peter Bingham",
       author_email="petersbingham@hotmail.co.uk",
       packages=['TwoChanRadialWell'],
-      package_data={'TwoChanRadialWell': ['tests/*', 'README.md'],
+      package_data={'TwoChanRadialWell': ['tests/*', 'README.md']}
      )
