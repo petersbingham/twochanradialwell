@@ -317,7 +317,7 @@ def getSmatFun(r0, v1, v2, chanCalc, lam, resultsType=RESULTS_TYPE_DEFAULT):
     if tu is not None:
         return tu.cSmat(funPtr, tu.HARTs)
     else:
-        funPtr
+        return funPtr
 
 def usePythonTypes(dps=nw.dps_default_python):
     nw.usePythonTypes(dps)
