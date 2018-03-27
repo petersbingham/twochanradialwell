@@ -79,9 +79,9 @@ class mat:
             return nw.formattedFloatString(nw.complex(value).real, self.precision)
 
 class Mats:
-    def __init__(self, v1, v2, chanCalc, lam):
-        self.K = Mats.Kmat(chanCalc)
-        self.V = Mats.Vmat(v1, v2, chanCalc, lam)
+    def __init__(self, v1, v2, asymCal, lam):
+        self.K = Mats.Kmat(asymCal)
+        self.V = Mats.Vmat(v1, v2, asymCal, lam)
         self.A = Mats.Amat(self.K, self.V)
         if LIN_ALGEBRA:
             self.aSq = Mats.aSqMat(self.A)
@@ -102,10 +102,10 @@ class Mats:
         print str(self.a)
 
     class Kmat(mat):
-        def __init__(self, chanCalc):
+        def __init__(self, asymCal):
             mat.__init__(self, 2, num.precision)
             self.ene = 0
-            self.chanCalc = chanCalc
+            self.asymCal = asymCal
         def setEnergy(self, ene):
             self.ene = ene
         def _getRow(self, i):
@@ -114,14 +114,14 @@ class Mats:
             else:
                 return [0, self.k(1)]
         def k(self, ch):
-            return self.chanCalc.k(ch, self.ene)
+            return self.asymCal.k(ch, self.ene)
 
     class Vmat(mat):
-        def __init__(self, v1, v2, chanCalc, lam):
+        def __init__(self, v1, v2, asymCal, lam):
             mat.__init__(self, 2, num.precision)
             self.v1 = v1
             self.v2 = v2
-            self.massMult = chanCalc.getEneConv()
+            self.massMult = asymCal.getEneConv()
             self.lam = lam
         def _getRow(self, i):
             if i==0:
@@ -310,12 +310,13 @@ class Smat(mat):
 ######################### Public Interface #############################
 ########################################################################
 
-def getSmatFun(r0, v1, v2, chanCalc, lam, resultsType=RESULTS_TYPE_DEFAULT):
-    mats = Mats(v1, v2, chanCalc, lam)
+def getSmatFun(r0, v1, v2, asymCal, lam, resultsType=RESULTS_TYPE_DEFAULT):
+    mats = Mats(v1, v2, asymCal, lam)
     sMat = Smat(r0, mats, resultsType)
     funPtr = lambda ene : sMat.setEnergy(ene).getMatrix()
     if tu is not None:
-        return tu.cSmat(funPtr, tu.HARTs)
+        assert asymCal.getUnits() == tu.HARTs
+        return tu.cSmat(funPtr, asymCal)
     else:
         return funPtr
 
