@@ -306,6 +306,11 @@ class Smat(mat):
                 raise RadWellException("_R_alp: " + str(cal1) + "   " + str(cal2))
         return cal2
 
+def _getSourceStr(r0, v1, v2, asymCal, lam):
+    srcStr = "TwoChanRadWell"+"_"+str(r0)+"_"+str(v1)+"_"+str(v2)
+    srcStr += "_"+str(asymCal.th(0)) + "_"+str(asymCal.th(1))+"_"+str(lam)
+    return srcStr
+
 ########################################################################   
 ######################### Public Interface #############################
 ########################################################################
@@ -316,7 +321,7 @@ def getSmatFun(r0, v1, v2, asymCal, lam, resultsType=RESULTS_TYPE_DEFAULT):
     funPtr = lambda ene : sMat.setEnergy(ene).getMatrix()
     if tu is not None:
         assert asymCal.getUnits() == tu.HARTs
-        return tu.cSmat(funPtr, asymCal)
+        return tu.cSmat(funPtr, asymCal, _getSourceStr(r0,v1,v2,asymCal,lam))
     else:
         return funPtr
 
