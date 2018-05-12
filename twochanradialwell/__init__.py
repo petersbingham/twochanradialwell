@@ -8,12 +8,12 @@ try:
 except:
     tu = None
 
-EQUIVALENT_TESTS = False
-LIN_ALGEBRA = False
+equiv_tests = False
+lin_algebra = False
 
-RESULTS_TYPE_FLOAT32 = -1
-RESULTS_TYPE_FLOAT64 = -2
-RESULTS_TYPE_DEFAULT = 0
+float32 = -1
+float64 = -2
+default = 0
 
 gu = num.NearlyEqual()
 
@@ -23,7 +23,7 @@ class RadWellException(Exception):
     def __str__(self):
         return "Rad Well Error: " + self.string
 
-class mat:
+class Mat:
     PADDING = 3
     def __init__(self, size, precision):
         self.size = size
@@ -31,9 +31,9 @@ class mat:
         self.min = pow(10,-self.precision)
 
     def __getitem__(self, i):
-        return self._getRow(i)
+        return self._get_row(i)
 
-    def getMatrix(self):
+    def get_matrix(self):
         mlist = []
         for m in range(self.size):
             rlist = []
@@ -43,57 +43,57 @@ class mat:
         return nw.matrix(mlist)
 
     def __str__(self):
-        isImag = self._isImag()
+        is_imag = self._is_imag()
 
-        maxLen = 0
+        max_len = 0
         for m in range(self.size-1):
             for n in range(self.size-1):
-                eLen = len(self._getFormattedStr(self[m][n], isImag))
-                if eLen > maxLen:
-                    maxLen = eLen
+                eLen = len(self._get_formatted_str(self[m][n], is_imag))
+                if eLen > max_len:
+                    max_len = eLen
         s = ""
         for m in range(self.size):
             for n in range(self.size):
-                s += self._padStr(self[m][n], isImag, maxLen)
+                s += self._pad_str(self[m][n], is_imag, max_len)
             s += "\n"
         return s
 
-    def _padStr(self, value, isImag, maxLen=None):
-        theStr = self._getFormattedStr(value, isImag)
-        if maxLen is not None:
-            return theStr.ljust(maxLen + self.PADDING)
+    def _pad_str(self, value, is_imag, max_len=None):
+        theStr = self._get_formatted_str(value, is_imag)
+        if max_len is not None:
+            return theStr.ljust(max_len + self.PADDING)
         else:
             return theStr
 
-    def _isImag(self):
+    def _is_imag(self):
         for m in range(0,self.size):
             for n in range(0,self.size):
                 if abs(float(nw.complex(self[m][n]).imag)) > self.min:
                     return True
         return False
 
-    def _getFormattedStr(self, value, isImag):
-        if isImag:
-            return nw.formattedComplexString(nw.complex(value), self.precision)
+    def _get_formatted_str(self, value, is_imag):
+        if is_imag:
+            return nw.formatted_complex_string(nw.complex(value), self.precision)
         else:
-            return nw.formattedFloatString(nw.complex(value).real, self.precision)
+            return nw.formatted_float_string(nw.complex(value).real, self.precision)
 
 class Mats:
     def __init__(self, v1, v2, asymcalc, lam):
         self.K = Mats.Kmat(asymcalc)
         self.V = Mats.Vmat(v1, v2, asymcalc, lam)
         self.A = Mats.Amat(self.K, self.V)
-        if LIN_ALGEBRA:
+        if lin_algebra:
             self.aSq = Mats.aSqMat(self.A)
             self.a = Mats.aMat(self.aSq)
 
-    def setEnergy(self, ene):
-        self.K.setEnergy(ene)
-        if LIN_ALGEBRA:
+    def set_energy(self, ene):
+        self.K.set_energy(ene)
+        if lin_algebra:
             self.aSq.calculate()
             self.a.calculate()
 
-    def printMats(self):
+    def print_mats(self):
         print "\nK:"
         print str(self.K) + "\n\nV:"
         print str(self.V) + "\n\nA:"
@@ -101,14 +101,14 @@ class Mats:
         print str(self.aSq) + "\n\na:"
         print str(self.a)
 
-    class Kmat(mat):
+    class Kmat(Mat):
         def __init__(self, asymcalc):
-            mat.__init__(self, 2, num.precision)
+            Mat.__init__(self, 2, num.precision)
             self.ene = 0
             self.asymcalc = asymcalc
-        def setEnergy(self, ene):
+        def set_energy(self, ene):
             self.ene = ene
-        def _getRow(self, i):
+        def _get_row(self, i):
             if i==0:
                 return [self.k(0), 0]
             else:
@@ -116,64 +116,64 @@ class Mats:
         def k(self, ch):
             return self.asymcalc.k(ch, self.ene)
 
-    class Vmat(mat):
+    class Vmat(Mat):
         def __init__(self, v1, v2, asymcalc, lam):
-            mat.__init__(self, 2, num.precision)
+            Mat.__init__(self, 2, num.precision)
             self.v1 = v1
             self.v2 = v2
-            self.massMult = asymcalc.getEneConv()
+            self.massMult = asymcalc.get_ene_conv()
             self.lam = lam
-        def _getRow(self, i):
+        def _get_row(self, i):
             if i==0:
                 return [-self.v1*self.massMult, -0.5*self.lam*self.massMult]
             else:
                 return [-0.5*self.lam*self.massMult, -self.v2*self.massMult]
 
-    class Amat(mat):
+    class Amat(Mat):
         def __init__(self, K, V):
-            mat.__init__(self, 2, num.precision)
+            Mat.__init__(self, 2, num.precision)
             self.K = K
             self.V = V
-        def _getRow(self, i):
+        def _get_row(self, i):
             return [nw.pow(self.K[i][0],2)-self.V[i][0],
                     nw.pow(self.K[i][1],2)-self.V[i][1]]
 
-    class aSqMat(mat):
+    class aSqMat(Mat):
         def __init__(self, A):
-            mat.__init__(self, 2, num.precision)
+            Mat.__init__(self, 2, num.precision)
             self.A = A
             self.calculate()
         def calculate(self):
-            m = self.A.getMatrix()
+            m = self.A.get_matrix()
             eigvals,eigvecs = np.linalg.eig(m)
             self.aSq = np.diagflat(eigvals) 
-        def _getRow(self, i):
+        def _get_row(self, i):
             return [self.aSq[i,0], self.aSq[i,1]]
 
-    class aMat(mat):
+    class aMat(Mat):
         def __init__(self, aSq):
-            mat.__init__(self, 2, num.precision)
+            Mat.__init__(self, 2, num.precision)
             self.aSq = aSq
             self.calculate()
         def calculate(self):
-            m = self.aSq.getMatrix()
+            m = self.aSq.get_matrix()
             self.a = la.sqrtm(m)
-        def _getRow(self, i):
+        def _get_row(self, i):
             return [self.a[i,0], self.a[i,1]]
 
-class Smat(mat):
-    def __init__(self, r0, mats, resultsType=RESULTS_TYPE_DEFAULT):
-        mat.__init__(self, 2, num.precision)
-        self.resultsType = resultsType
-        self.numChannels = 2
+class Smat(Mat):
+    def __init__(self, r0, mats, results_type=default):
+        Mat.__init__(self, 2, num.precision)
+        self.results_type = results_type
+        self.num_channels = 2
         self.mats = mats
         self.r0 = r0
 
-    def setEnergy(self, ene):
-        self.mats.setEnergy(ene)
+    def set_energy(self, ene):
+        self.mats.set_energy(ene)
         return self
 
-    def _getRow(self, i):
+    def _get_row(self, i):
         if i==0:
             return [self._S_11(), self._S_12()]
         else:
@@ -187,17 +187,17 @@ class Smat(mat):
         return float(float(m)*float(10**float(e)))
 
     def _cast_result(self, result):
-        if self.resultsType != RESULTS_TYPE_DEFAULT:
-            if self.resultsType == RESULTS_TYPE_FLOAT64:
+        if self.results_type != default:
+            if self.results_type == float64:
                 return complex(result)
-            elif self.resultsType == RESULTS_TYPE_FLOAT32:
+            elif self.results_type == float32:
                 return complex(float(np.float32(result.real)), 
                                float(np.float32(result.imag)))
             else:
                 return complex(self._truncate_float(float(result.real), 
-                                                    self.resultsType), 
+                                                    self.results_type), 
                                self._truncate_float(float(result.imag), 
-                                                    self.resultsType))
+                                                    self.results_type))
         else:
             return result
 
@@ -233,7 +233,7 @@ class Smat(mat):
 
     def _denum(self, test=True):
         value = self._g(self._rho_1(), self._rho_2())
-        if test and gu.complexCompare(value, 0.0):
+        if test and gu.complex_compare(value, 0.0):
             raise RadWellException("_denum: Zero")
         return value
 
@@ -251,16 +251,16 @@ class Smat(mat):
     def _alp_1(self):
         cal1 = nw.pow(self._e_n(0), 2) - nw.pow(self._R_alp(0), 2)
         cal2 = nw.pow(self._R_alp(1), 2) - nw.pow(self._e_n(1), 2)
-        if EQUIVALENT_TESTS:
-            if not gu.complexCompare(cal1, cal2):
+        if equiv_tests:
+            if not gu.complex_compare(cal1, cal2):
                 raise RadWellException("_alp_1: " + str(cal1) + "   " + str(cal2))
         return cal1
 
     def _alp_2(self):
         cal1 = nw.pow(self._e_n(1), 2) - nw.pow(self._R_alp(0), 2)
         cal2 = nw.pow(self._R_alp(1), 2) - nw.pow(self._e_n(0), 2)
-        if EQUIVALENT_TESTS:
-            if not gu.complexCompare(cal1, cal2):
+        if equiv_tests:
+            if not gu.complex_compare(cal1, cal2):
                 raise RadWellException("_alp_2: " + str(cal1) + "   " + str(cal2))
         return cal1
 
@@ -273,13 +273,13 @@ class Smat(mat):
 #######
 
     def _e_n(self, n):
-        if LIN_ALGEBRA:
+        if lin_algebra:
             cal1 = self.mats.a[n][n] * self.r0
         cal2 = nw.sqrt(self._e_n_Sq_alt(n))
-        if EQUIVALENT_TESTS:
-            if not gu.complexCompare(cal1, cal2):
+        if equiv_tests:
+            if not gu.complex_compare(cal1, cal2):
                 raise RadWellException("_e_n: " + str(cal1) + "   " + str(cal2))
-        if LIN_ALGEBRA:
+        if lin_algebra:
             return cal1
         else:
             return cal2
@@ -301,12 +301,12 @@ class Smat(mat):
         cal1 = nw.sqrt( self.mats.A[ch][ch] ) * self.r0
         cal2 = nw.sqrt( nw.pow(self._rho_alp(ch),2) -\
         self.mats.V[ch][ch]*nw.pow(self.r0,2.0) )
-        if EQUIVALENT_TESTS:
-            if not gu.complexCompare(cal1, cal2):
+        if equiv_tests:
+            if not gu.complex_compare(cal1, cal2):
                 raise RadWellException("_R_alp: " + str(cal1) + "   " + str(cal2))
         return cal2
 
-def _getSourceStr(r0, v1, v2, asymcalc, lam):
+def _get_source_str(r0, v1, v2, asymcalc, lam):
     srcStr = "TwoChanRadWell"+"_"+str(r0)+"_"+str(v1)+"_"+str(v2)
     srcStr += "_"+str(asymcalc.th(0)) + "_"+str(asymcalc.th(1))+"_"+str(lam)
     return srcStr
@@ -315,21 +315,21 @@ def _getSourceStr(r0, v1, v2, asymcalc, lam):
 ######################### Public Interface #############################
 ########################################################################
 
-def getSmatFun(r0, v1, v2, asymcalc, lam, resultsType=RESULTS_TYPE_DEFAULT):
+def get_Smat_fun(r0, v1, v2, asymcalc, lam, results_type=default):
     mats = Mats(v1, v2, asymcalc, lam)
-    sMat = Smat(r0, mats, resultsType)
-    funPtr = lambda ene : sMat.setEnergy(ene).getMatrix()
+    sMat = Smat(r0, mats, results_type)
+    fun_ref = lambda ene : sMat.set_energy(ene).get_matrix()
     if tu is not None:
-        assert asymcalc.getUnits() == tu.HARTs
-        return tu.cSmat(funPtr, asymcalc, _getSourceStr(r0,v1,v2,asymcalc,lam))
+        assert asymcalc.get_units() == tu.HARTs
+        return tu.cSmat(fun_ref, asymcalc, _get_source_str(r0,v1,v2,asymcalc,lam))
     else:
-        return funPtr
+        return fun_ref
 
-def usePythonTypes(dps=nw.dps_default_python):
-    nw.usePythonTypes(dps)
+def use_python_types(dps=nw.dps_default_python):
+    nw.use_python_types(dps)
 
-def useMpmathTypes(dps=nw.dps_default_mpmath):
-    nw.useMpmathTypes(dps)
+def use_mpmath_types(dps=nw.dps_default_mpmath):
+    nw.use_mpmath_types(dps)
 
-def setTypeMode(mode, dps=None):
-    nw.setTypeMode(mode, dps)
+def set_type_mode(mode, dps=None):
+    nw.set_type_mode(mode, dps)
