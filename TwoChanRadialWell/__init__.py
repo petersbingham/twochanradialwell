@@ -15,7 +15,7 @@ RESULTS_TYPE_FLOAT32 = -1
 RESULTS_TYPE_FLOAT64 = -2
 RESULTS_TYPE_DEFAULT = 0
 
-gu = num.nearlyEqual()
+gu = num.NearlyEqual()
 
 class RadWellException(Exception):
     def __init__(self, string):
@@ -79,9 +79,9 @@ class mat:
             return nw.formattedFloatString(nw.complex(value).real, self.precision)
 
 class Mats:
-    def __init__(self, v1, v2, asymCal, lam):
-        self.K = Mats.Kmat(asymCal)
-        self.V = Mats.Vmat(v1, v2, asymCal, lam)
+    def __init__(self, v1, v2, asymcalc, lam):
+        self.K = Mats.Kmat(asymcalc)
+        self.V = Mats.Vmat(v1, v2, asymcalc, lam)
         self.A = Mats.Amat(self.K, self.V)
         if LIN_ALGEBRA:
             self.aSq = Mats.aSqMat(self.A)
@@ -102,10 +102,10 @@ class Mats:
         print str(self.a)
 
     class Kmat(mat):
-        def __init__(self, asymCal):
+        def __init__(self, asymcalc):
             mat.__init__(self, 2, num.precision)
             self.ene = 0
-            self.asymCal = asymCal
+            self.asymcalc = asymcalc
         def setEnergy(self, ene):
             self.ene = ene
         def _getRow(self, i):
@@ -114,14 +114,14 @@ class Mats:
             else:
                 return [0, self.k(1)]
         def k(self, ch):
-            return self.asymCal.k(ch, self.ene)
+            return self.asymcalc.k(ch, self.ene)
 
     class Vmat(mat):
-        def __init__(self, v1, v2, asymCal, lam):
+        def __init__(self, v1, v2, asymcalc, lam):
             mat.__init__(self, 2, num.precision)
             self.v1 = v1
             self.v2 = v2
-            self.massMult = asymCal.getEneConv()
+            self.massMult = asymcalc.getEneConv()
             self.lam = lam
         def _getRow(self, i):
             if i==0:
@@ -306,22 +306,22 @@ class Smat(mat):
                 raise RadWellException("_R_alp: " + str(cal1) + "   " + str(cal2))
         return cal2
 
-def _getSourceStr(r0, v1, v2, asymCal, lam):
+def _getSourceStr(r0, v1, v2, asymcalc, lam):
     srcStr = "TwoChanRadWell"+"_"+str(r0)+"_"+str(v1)+"_"+str(v2)
-    srcStr += "_"+str(asymCal.th(0)) + "_"+str(asymCal.th(1))+"_"+str(lam)
+    srcStr += "_"+str(asymcalc.th(0)) + "_"+str(asymcalc.th(1))+"_"+str(lam)
     return srcStr
 
 ########################################################################   
 ######################### Public Interface #############################
 ########################################################################
 
-def getSmatFun(r0, v1, v2, asymCal, lam, resultsType=RESULTS_TYPE_DEFAULT):
-    mats = Mats(v1, v2, asymCal, lam)
+def getSmatFun(r0, v1, v2, asymcalc, lam, resultsType=RESULTS_TYPE_DEFAULT):
+    mats = Mats(v1, v2, asymcalc, lam)
     sMat = Smat(r0, mats, resultsType)
     funPtr = lambda ene : sMat.setEnergy(ene).getMatrix()
     if tu is not None:
-        assert asymCal.getUnits() == tu.HARTs
-        return tu.cSmat(funPtr, asymCal, _getSourceStr(r0,v1,v2,asymCal,lam))
+        assert asymcalc.getUnits() == tu.HARTs
+        return tu.cSmat(funPtr, asymcalc, _getSourceStr(r0,v1,v2,asymcalc,lam))
     else:
         return funPtr
 

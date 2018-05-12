@@ -9,8 +9,8 @@ import unittest
 
 class test_elastic(unittest.TestCase):
     def runTest(self):
-        asymCal = chanutil.asymCal(chanutil.HARTs, [0,0])
-        fun = radwell.getSmatFun(1., 2., 2., asymCal, 1.)
+        asymcalc = chanutil.AsymCalc(chanutil.HARTs, [0,0])
+        fun = radwell.getSmatFun(1., 2., 2., asymcalc, 1.)
 
         expectMat = radwell.nw.matrix([[1., 0.],[0., 1.]])
         gotMat = fun(0.)
