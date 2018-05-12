@@ -1,12 +1,12 @@
-# TwoChanRadialWell
+# twochanradialwell
 Calculates solutions to the two channel radial well as described in Newton's "Scattering Theory of Waves and Particles".
 
 ## Installation
 
 Clone the repository and install with the following commands:
 
-    git clone https://github.com/petersbingham/TwoChanRadialWell.git
-    cd TwoChanRadialWell
+    git clone https://github.com/petersbingham/twochanradialwell.git
+    cd twochanradialwell
     python setup.py install
     
 ## Dependencies
@@ -29,7 +29,7 @@ getSmatFun(r0, v1, v2, chanCalc, lam)
 
 The example below illustrates usage.
 ```python
->>> import TwoChanRadialWell as radwell
+>>> import twochanradialwell as radwell
 >>> import channelutil as chanutil
 >>> chanCalc = chanutil.calculator([0.,2.], massMult=chanutil.MASSMULT_HARTREES)
 >>> sMatfFn = radwell.getSmatFun(1., 2., 2., chanCalc, 1.)
@@ -38,4 +38,4 @@ The example below illustrates usage.
  [  0.00000000+0.j -13.56891277+0.j]]
 ```
 
-There are two types that TwoChanRadialWell is compatible with, standard python types and mpmath types. Python types is the default. To change to mpmath types call the module function `usempmathTypes()`.
+There are two types that twochanradialwell is compatible with, standard python types and mpmath types. Python types is the default. To change to mpmath types call the module function `usempmathTypes()`.

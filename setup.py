@@ -2,13 +2,13 @@
 
 from distutils.core import setup
 import shutil
-shutil.copy('README.md', 'TwoChanRadialWell/README.md')
+shutil.copy('README.md', 'twochanradialwell/README.md')
 
-setup(name='TwoChanRadialWell',
-      version='0.10',
+setup(name='twochanradialwell',
+      version='0.11',
       description='Calculates solutions to the two channel radial well as described in Newton\'s "Scattering Theory of Waves and Particles".',
       author="Peter Bingham",
       author_email="petersbingham@hotmail.co.uk",
-      packages=['TwoChanRadialWell'],
-      package_data={'TwoChanRadialWell': ['tests/*', 'README.md']}
+      packages=['twochanradialwell'],
+      package_data={'twochanradialwell': ['tests/*', 'README.md']}
      )
