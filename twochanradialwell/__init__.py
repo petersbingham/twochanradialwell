@@ -24,7 +24,7 @@ class RadWellException(Exception):
         return "Rad Well Error: " + self.string
 
 class Mat:
-    PADDING = 3
+    padding = 3
     def __init__(self, size, precision):
         self.size = size
         self.precision = precision
@@ -48,9 +48,9 @@ class Mat:
         max_len = 0
         for m in range(self.size-1):
             for n in range(self.size-1):
-                eLen = len(self._get_formatted_str(self[m][n], is_imag))
-                if eLen > max_len:
-                    max_len = eLen
+                e_len = len(self._get_formatted_str(self[m][n], is_imag))
+                if e_len > max_len:
+                    max_len = e_len
         s = ""
         for m in range(self.size):
             for n in range(self.size):
@@ -59,11 +59,11 @@ class Mat:
         return s
 
     def _pad_str(self, value, is_imag, max_len=None):
-        theStr = self._get_formatted_str(value, is_imag)
+        the_str = self._get_formatted_str(value, is_imag)
         if max_len is not None:
-            return theStr.ljust(max_len + self.PADDING)
+            return the_str.ljust(max_len + self.padding)
         else:
-            return theStr
+            return the_str
 
     def _is_imag(self):
         for m in range(0,self.size):
@@ -84,13 +84,13 @@ class Mats:
         self.V = Mats.Vmat(v1, v2, asymcalc, lam)
         self.A = Mats.Amat(self.K, self.V)
         if lin_algebra:
-            self.aSq = Mats.aSqMat(self.A)
-            self.a = Mats.aMat(self.aSq)
+            self.a_sq = Mats.aSqMat(self.A)
+            self.a = Mats.aMat(self.a_sq)
 
     def set_energy(self, ene):
         self.K.set_energy(ene)
         if lin_algebra:
-            self.aSq.calculate()
+            self.a_sq.calculate()
             self.a.calculate()
 
     def print_mats(self):
@@ -98,7 +98,7 @@ class Mats:
         print str(self.K) + "\n\nV:"
         print str(self.V) + "\n\nA:"
         print str(self.A) + "\n\nsqrt(A):"
-        print str(self.aSq) + "\n\na:"
+        print str(self.a_sq) + "\n\na:"
         print str(self.a)
 
     class Kmat(Mat):
@@ -121,13 +121,13 @@ class Mats:
             Mat.__init__(self, 2, num.precision)
             self.v1 = v1
             self.v2 = v2
-            self.massMult = asymcalc.get_ene_conv()
+            self.mass_mult = asymcalc.get_ene_conv()
             self.lam = lam
         def _get_row(self, i):
             if i==0:
-                return [-self.v1*self.massMult, -0.5*self.lam*self.massMult]
+                return [-self.v1*self.mass_mult, -0.5*self.lam*self.mass_mult]
             else:
-                return [-0.5*self.lam*self.massMult, -self.v2*self.massMult]
+                return [-0.5*self.lam*self.mass_mult, -self.v2*self.mass_mult]
 
     class Amat(Mat):
         def __init__(self, K, V):
@@ -145,18 +145,18 @@ class Mats:
             self.calculate()
         def calculate(self):
             m = self.A.get_matrix()
-            eigvals,eigvecs = np.linalg.eig(m)
-            self.aSq = np.diagflat(eigvals) 
+            eigvals,_ = np.linalg.eig(m)
+            self.a_sq = np.diagflat(eigvals) 
         def _get_row(self, i):
-            return [self.aSq[i,0], self.aSq[i,1]]
+            return [self.a_sq[i,0], self.a_sq[i,1]]
 
     class aMat(Mat):
-        def __init__(self, aSq):
+        def __init__(self, a_sq):
             Mat.__init__(self, 2, num.precision)
-            self.aSq = aSq
+            self.a_sq = a_sq
             self.calculate()
         def calculate(self):
-            m = self.aSq.get_matrix()
+            m = self.a_sq.get_matrix()
             self.a = la.sqrtm(m)
         def _get_row(self, i):
             return [self.a[i,0], self.a[i,1]]
@@ -320,7 +320,7 @@ def get_Smat_fun(r0, v1, v2, asymcalc, lam, results_type=default):
     sMat = Smat(r0, mats, results_type)
     fun_ref = lambda ene : sMat.set_energy(ene).get_matrix()
     if tu is not None:
-        assert asymcalc.get_units() == tu.HARTs
+        assert asymcalc.get_units() == tu.hartrees
         return tu.cSmat(fun_ref, asymcalc, _get_source_str(r0,v1,v2,asymcalc,lam))
     else:
         return fun_ref

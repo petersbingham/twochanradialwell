@@ -9,24 +9,24 @@ import unittest
 
 class test_elastic(unittest.TestCase):
     def runTest(self):
-        asymcalc = chanutil.AsymCalc(chanutil.HARTs, thresholds=[0.,2.])
+        asymcalc = chanutil.AsymCalc(chanutil.hartrees, thresholds=[0.,2.])
         fun = radwell.get_Smat_fun(1., 2., 2., asymcalc, 1.)
 
-        expectMat = radwell.nw.matrix([[1., 0.],[0., -13.56891277]])
-        gotMat = fun(0.)
-        self.assertTrue(radwell.nw.np.allclose(gotMat,expectMat))
+        expect_mat = radwell.nw.matrix([[1., 0.],[0., -13.56891277]])
+        got_mat = fun(0.)
+        self.assertTrue(radwell.nw.np.allclose(got_mat,expect_mat))
 
-        expectMat = radwell.nw.matrix(\
+        expect_mat = radwell.nw.matrix(\
           [[-0.92934972-0.36920061j, 3.95429415+5.82581759j],
            [3.95429415+5.82581759j, -22.30580611-24.7882964j]])
-        gotMat = fun(1.8)
-        self.assertTrue(radwell.nw.np.allclose(gotMat,expectMat))
+        got_mat = fun(1.8)
+        self.assertTrue(radwell.nw.np.allclose(got_mat,expect_mat))
 
-        expectMat = radwell.nw.matrix(\
+        expect_mat = radwell.nw.matrix(\
           [[0.17030364+0.94186257j, -0.26879527-0.10789196j],
            [-0.26879527-0.10789196j, -0.77423472+0.56273353j]])
-        gotMat = fun(3.0)
-        self.assertTrue(radwell.nw.np.allclose(gotMat,expectMat))
+        got_mat = fun(3.0)
+        self.assertTrue(radwell.nw.np.allclose(got_mat,expect_mat))
 
 
 
