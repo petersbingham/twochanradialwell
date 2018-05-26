@@ -10,11 +10,11 @@ Clone the repository and install with the following commands:
     python setup.py install
     
 ## Dependencies
-Standard Libraries: 
+Third party packages: 
  - numpy
  - scipy
 
-Author Libraries (these will have their own dependencies):
+Author packages (these will have their own dependencies):
  - pynumwrap https://github.com/petersbingham/pynumwrap
  - pynumutil https://github.com/petersbingham/pynumutil
  - tisutil (optional) https://github.com/petersbingham/tisutil
