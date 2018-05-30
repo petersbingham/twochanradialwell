@@ -43,40 +43,40 @@ class Mat:
         return nw.matrix(mlist)
 
     def __str__(self):
-        is_imag = self._is_imag()
+        is_complex = self._is_complex()
 
         max_len = 0
         for m in range(self.size-1):
             for n in range(self.size-1):
-                e_len = len(self._get_formatted_str(self[m][n], is_imag))
+                e_len = len(self._get_formatted_str(self[m][n], is_complex))
                 if e_len > max_len:
                     max_len = e_len
         s = ""
         for m in range(self.size):
             for n in range(self.size):
-                s += self._pad_str(self[m][n], is_imag, max_len)
+                s += self._pad_str(self[m][n], is_complex, max_len)
             s += "\n"
         return s
 
-    def _pad_str(self, value, is_imag, max_len=None):
-        the_str = self._get_formatted_str(value, is_imag)
+    def _pad_str(self, value, is_complex, max_len=None):
+        the_str = self._get_formatted_str(value, is_complex)
         if max_len is not None:
             return the_str.ljust(max_len + self.padding)
         else:
             return the_str
 
-    def _is_imag(self):
+    def _is_complex(self):
         for m in range(0,self.size):
             for n in range(0,self.size):
                 if abs(float(nw.complex(self[m][n]).imag)) > self.min:
                     return True
         return False
 
-    def _get_formatted_str(self, value, is_imag):
-        if is_imag:
-            return nw.formatted_complex_string(nw.complex(value), self.precision)
+    def _get_formatted_str(self, value, is_complex):
+        if is_complex:
+            return nw.num_str(nw.complex(value), self.precision)
         else:
-            return nw.formatted_float_string(nw.complex(value).real, self.precision)
+            return nw.num_str_real(nw.complex(value), self.precision)
 
 class Mats:
     def __init__(self, v1, v2, asymcalc, lam):
@@ -98,8 +98,9 @@ class Mats:
         print str(self.K) + "\n\nV:"
         print str(self.V) + "\n\nA:"
         print str(self.A) + "\n\nsqrt(A):"
-        print str(self.a_sq) + "\n\na:"
-        print str(self.a)
+        if lin_algebra:
+            print str(self.a_sq) + "\n\na:"
+            print str(self.a)
 
     class Kmat(Mat):
         def __init__(self, asymcalc):
