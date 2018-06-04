@@ -309,7 +309,7 @@ class Smat(Mat):
 
 def _get_source_str(r0, v1, v2, asymcalc, lam):
     srcStr = "TwoChanRadWell"+"_"+str(r0)+"_"+str(v1)+"_"+str(v2)
-    srcStr += "_"+str(asymcalc.th(0)) + "_"+str(asymcalc.th(1))+"_"+str(lam)
+    srcStr += "_"+str(asymcalc.thres(0)) + "_"+str(asymcalc.thres(1))+"_"+str(lam)
     return srcStr
 
 ########################################################################   

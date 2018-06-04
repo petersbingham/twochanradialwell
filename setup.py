@@ -5,7 +5,7 @@ import shutil
 shutil.copy('README.md', 'twochanradialwell/README.md')
 
 setup(name='twochanradialwell',
-      version='0.14',
+      version='0.15',
       description='Calculates solutions to the two channel radial well as described in Newton\'s "Scattering Theory of Waves and Particles".',
       author="Peter Bingham",
       author_email="petersbingham@hotmail.co.uk",
