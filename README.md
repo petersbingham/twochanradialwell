@@ -15,10 +15,10 @@ Third party packages:
  - scipy
 
 Author packages (these will have their own dependencies):
- - pynumwrap https://github.com/petersbingham/pynumwrap
- - pynumutil https://github.com/petersbingham/pynumutil
- - tisutil (optional) https://github.com/petersbingham/tisutil
- - channelutil (optional) https://github.com/petersbingham/channelutil
+ - [pynumwrap](https://github.com/petersbingham/pynumwrap)
+ - [pynumutil](https://github.com/petersbingham/pynumutil)
+ - [tisutil](https://github.com/petersbingham/tisutil) (optional)
+ - [channelutil](https://github.com/petersbingham/channelutil) (optional)
 
 ## Usage
 
