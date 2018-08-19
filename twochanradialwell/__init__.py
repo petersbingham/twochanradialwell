@@ -7,6 +7,7 @@ try:
     import tisutil as tu
 except:
     tu = None
+from twochanradialwell.release import __version__
 
 equiv_tests = False
 lin_algebra = False
